@@ -2,6 +2,12 @@ const User = require('../models/user');
 const express = require('express');
 const router = express.Router();
 
+// Use middleware to set the default Content - Type
+router.use(function (req, res, next) {
+    res.header('Content-Type', 'application/json');
+    next();
+});
+
 router.post('/add-user', (req, res) => {
     const user = new User({
         fName: req.body.fName,
@@ -56,7 +62,7 @@ router.delete('/delete-user/:id', (req, res) => {
 router.get('/all-users', (req, res) => {
     User.find()
         .then((result) => {
-            res.send(result)
+            res.send(JSON.stringify(result, null, 10) + "\n")
         })
         .catch((err) => {
             console.log(err)
