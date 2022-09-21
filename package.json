@@ -1,0 +1,22 @@
+{
+  "dependencies": {
+    "compression": "^1.7.4",
+    "express": "^4.18.1",
+    "helmet": "^6.0.0",
+    "mongoose": "^6.6.1",
+    "nodemon": "^2.0.20"
+  },
+  "name": "infinity-trendz",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "engines": {
+    "node": "18.4.0"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
