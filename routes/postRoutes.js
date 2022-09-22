@@ -3,6 +3,11 @@ const express = require('express');
 const { time } = require('console');
 const router = express.Router();
 
+router.use(function (req, res, next) {
+    res.header('Content-Type', 'application/json');
+    next();
+});
+
 router.post('/add-post', (req, res) => {
     const post = new Post({
         title: req.body.title,
