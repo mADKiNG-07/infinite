@@ -18,13 +18,16 @@ const userSchema = Schema({
         type: String,
         required: true
     },
+    country: {
+        type: String,
+        required: true
+    },
     phoneNumber: {
         type: String,
         required: true
     },
     accountType: {
         type: String,
-        required: true
     }
     // country
 }, { timestamps: true });
