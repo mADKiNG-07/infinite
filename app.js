@@ -38,3 +38,5 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
 app.use('/posts', postRoutes);
 app.use('/users', userRoutes);
 require('./startup/prod')(app);
+
+// hello world
