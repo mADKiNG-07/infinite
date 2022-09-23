@@ -1,7 +1,7 @@
 const Post = require('../models/post');
 const express = require('express');
-const { time } = require('console');
 const router = express.Router();
+const _ = require('lodash');
 
 router.use(function (req, res, next) {
     res.header('Content-Type', 'application/json');
@@ -9,12 +9,7 @@ router.use(function (req, res, next) {
 });
 
 router.post('/add-post', (req, res) => {
-    const post = new Post({
-        title: req.body.title,
-        body: req.body.body,
-        imgUrl: req.body.imgUrl,
-        timeFrame: req.body.timeFrame
-    });
+    const post = new Post(_.pick(req.body, "title", "body", "imgUrl", "timeFrame"));
 
     post.save()
         .then((result) => {

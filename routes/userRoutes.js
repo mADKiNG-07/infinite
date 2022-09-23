@@ -1,6 +1,10 @@
-const User = require('../models/user');
+const { User } = require('../models/user');
 const express = require('express');
 const router = express.Router();
+const _ = require('lodash');
+const { validate } = require('../models/user');
+const bcrypt = require('bcrypt');
+
 
 // Use middleware to set the default Content - Type
 router.use(function (req, res, next) {
@@ -8,16 +12,27 @@ router.use(function (req, res, next) {
     next();
 });
 
-router.post('/add-user', (req, res) => {
-    const user = new User({
-        fName: req.body.fName,
-        lName: req.body.lName,
-        dob: new Date(req.body.dob).getTime() + 86400000,
-        email: req.body.email,
-        country: req.body.country,
-        phoneNumber: req.body.phoneNumber,
-        accountType: "Exclusive",
-    });
+router.post('/add-user', async (req, res) => {
+    // validate body of params
+    const { error } = validate(req.body);
+    if (error) {
+        res.status(404).send(error.details[0].message);
+        return;
+    }
+
+    // checks if user already exists
+    let user = await User.findOne({ email: req.body.email });
+    if (user) return res.status(404).send('User already registered!');
+
+    user = new User(_.pick(req.body,
+        ["fName", "lName", "dob", "email", "password", "country", "phoneNumber", "accountType"]
+    ));
+
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(user.password, salt);
+
+    user.dob = new Date(user.dob).getTime() + 86400000;
+    user.accountType = "Free";
 
     user.save()
         .then((result) => {
