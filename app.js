@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const postRoutes = require('./routes/postRoutes');
 const userRoutes = require('./routes/userRoutes');
+const auth = require('./routes/auth');
 const app = express();
 
 app.use(express.json());
@@ -37,6 +38,7 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
 
 app.use('/posts', postRoutes);
 app.use('/users', userRoutes);
+app.use('/auth', auth);
 require('./startup/prod')(app);
 
 // hello world
