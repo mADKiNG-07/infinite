@@ -1,4 +1,5 @@
 const Post = require('../models/post');
+const mAuth = require('../middleware/mAuth')
 const express = require('express');
 const router = express.Router();
 const _ = require('lodash');
@@ -8,7 +9,7 @@ router.use(function (req, res, next) {
     next();
 });
 
-router.post('/add-post', (req, res) => {
+router.post('/add-post', mAuth, (req, res) => {
     const post = new Post(_.pick(req.body, "title", "body", "imgUrl", "timeFrame"));
 
     post.save()
@@ -20,7 +21,7 @@ router.post('/add-post', (req, res) => {
         })
 });
 
-router.put('/update-blog/:id', (req, res) => {
+router.put('/update-blog/:id', mAuth, (req, res) => {
     const id = req.params.id;
     Blog.findByIdAndUpdate(id,
         {
@@ -39,7 +40,7 @@ router.put('/update-blog/:id', (req, res) => {
 
 });
 
-router.delete('/delete-post/:id', (req, res) => {
+router.delete('/delete-post/:id', mAuth, (req, res) => {
     const id = req.params.id;
     Post.findByIdAndDelete(id)
         .then((result) => {
@@ -50,7 +51,7 @@ router.delete('/delete-post/:id', (req, res) => {
         })
 });
 
-router.get('/all-posts', (req, res) => {
+router.get('/all-posts', mAuth, (req, res) => {
     Post.find()
         .then((result) => {
             res.send(JSON.stringify(result, null, 3) + "\n")
@@ -60,7 +61,7 @@ router.get('/all-posts', (req, res) => {
         });
 });
 
-router.get('/all-posts/:id', (req, res) => {
+router.get('/all-posts/:id', mAuth, (req, res) => {
     const id = req.params.id;
     Post.findById(id)
         .then((result) => {
@@ -71,7 +72,7 @@ router.get('/all-posts/:id', (req, res) => {
         })
 });
 
-router.get('/all-posts/time-frame/:timeFrame', (req, res) => {
+router.get('/all-posts/time-frame/:timeFrame', mAuth, (req, res) => {
     const timeframe = req.params.timeFrame;
     Post.find({ timeFrame: timeframe })
         .then((result) => {

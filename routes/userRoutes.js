@@ -34,9 +34,13 @@ router.post('/add-user', async (req, res) => {
     user.dob = new Date(user.dob).getTime() + 86400000;
     user.accountType = "Free";
 
+    // removin this lines means you dont need the 
+    // user to login before getting a token
+    const token = user.generateAuthToken();
+
     user.save()
         .then((result) => {
-            res.send(JSON.stringify(result, null, 3) + "\n")
+            res.header('x-auth-token', token).send(JSON.stringify(result, null, 3) + "\n")
         })
         .catch((err) => {
             console.log(err)

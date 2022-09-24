@@ -1,9 +1,15 @@
+const config = require('config');
 const express = require('express');
 const mongoose = require('mongoose');
 const postRoutes = require('./routes/postRoutes');
 const userRoutes = require('./routes/userRoutes');
 const auth = require('./routes/auth');
 const app = express();
+
+if (!config.get('jwtPrivateKey')) {
+    console.error("FATAL ERROR: jwtPrivateKey is not defined!");
+    process.exit(1);
+}
 
 app.use(express.json());
 // Add headers
