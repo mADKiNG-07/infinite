@@ -38,14 +38,16 @@ const userSchema = new mongoose.Schema({
     },
     accountType: {
         type: String,
-    }
+    },
+    isAdmin: Boolean
     // country
 }, { timestamps: true });
 
 userSchema.methods.generateAuthToken = function () {
     const token = jwt.sign({
         _id: this._id,
-        email: this.email
+        email: this.email,
+        isAdmin: this.isAdmin
     },
         config.get('jwtPrivateKey'));
 

@@ -34,8 +34,9 @@ router.post('/add-user', async (req, res) => {
     user.dob = new Date(user.dob).getTime() + 86400000;
     user.accountType = "Free";
 
-    // removin this lines means you dont need the 
+    // removing this lines means you dont need the 
     // user to login before getting a token
+    // (the user will get a token to access routes)
     const token = user.generateAuthToken();
 
     user.save()

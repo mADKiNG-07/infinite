@@ -1,10 +1,15 @@
 const config = require('config');
+const winston = require('winston');
 const express = require('express');
-const mongoose = require('mongoose');
 const postRoutes = require('./routes/postRoutes');
 const userRoutes = require('./routes/userRoutes');
+const plans = require('./routes/plans');
 const auth = require('./routes/auth');
 const app = express();
+
+require('./startup/prod')(app);
+require('./startup/db')();
+
 
 if (!config.get('jwtPrivateKey')) {
     console.error("FATAL ERROR: jwtPrivateKey is not defined!");
@@ -31,20 +36,13 @@ app.use(function (req, res, next) {
     next();
 });
 
-const port = process.env.PORT || 3000;
-
-// connect to mongodb
-const dbURI = 'mongodb+srv://aynstein:aynstein123@nodetuts.52zrahp.mongodb.net/infinityTrendz?retryWrites=true&w=majority';
-mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then((result) => app.listen(port, () => {
-        console.log(`Listening on port ${port}...`)
-        console.log(`connected to db...`)
-    }))
-    .catch((err) => console.log(err))
-
 app.use('/posts', postRoutes);
 app.use('/users', userRoutes);
+app.use('/plans', plans);
 app.use('/auth', auth);
-require('./startup/prod')(app);
 
-// hello world
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log(`Listening on port ${port}...`)
+});

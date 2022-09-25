@@ -1,5 +1,6 @@
 const Post = require('../models/post');
-const mAuth = require('../middleware/mAuth')
+const mAuth = require('../middleware/mAuth');
+const mAdmin = require('../middleware/mAdmin');
 const express = require('express');
 const router = express.Router();
 const _ = require('lodash');
@@ -9,7 +10,7 @@ router.use(function (req, res, next) {
     next();
 });
 
-router.post('/add-post', mAuth, (req, res) => {
+router.post('/add-post', [mAuth, mAdmin], (req, res) => {
     const post = new Post(_.pick(req.body, "title", "body", "imgUrl", "timeFrame"));
 
     post.save()
@@ -21,7 +22,7 @@ router.post('/add-post', mAuth, (req, res) => {
         })
 });
 
-router.put('/update-blog/:id', mAuth, (req, res) => {
+router.put('/update-blog/:id', [mAuth, mAdmin], (req, res) => {
     const id = req.params.id;
     Blog.findByIdAndUpdate(id,
         {
@@ -40,7 +41,7 @@ router.put('/update-blog/:id', mAuth, (req, res) => {
 
 });
 
-router.delete('/delete-post/:id', mAuth, (req, res) => {
+router.delete('/delete-post/:id', [mAuth, mAdmin], (req, res) => {
     const id = req.params.id;
     Post.findByIdAndDelete(id)
         .then((result) => {
