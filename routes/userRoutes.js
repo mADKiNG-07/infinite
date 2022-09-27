@@ -1,9 +1,12 @@
+const https = require('https');
 const { User } = require('../models/user');
 const express = require('express');
 const router = express.Router();
 const _ = require('lodash');
 const { validate } = require('../models/user');
 const bcrypt = require('bcrypt');
+require('dotenv').config();
+
 
 
 // Use middleware to set the default Content - Type
@@ -123,5 +126,47 @@ router.get('/all-users/country/:country', (req, res) => {
             console.log(err)
         })
 });
+
+const params = JSON.stringify({
+    "country": "NG",
+    "type": "bank_account",
+    "account_number": "0123456789",
+    "bvn": "20012345677",
+    "bank_code": "007",
+    "first_name": "Asta",
+    "last_name": "Lavista"
+
+});
+
+const options = {
+    hostname: 'api.paystack.co',
+    port: 443,
+    path: '/customer/CUS_k4r89xh3uxmm5of/identification',
+    method: 'POST',
+    headers: {
+        Authorization: process.env.SECRET_KEY,
+        'Content-Type': 'application/json'
+    }
+}
+
+router.post('/validateUser', (req, res) => {
+    req = https.request(options, res => {
+        let data = ''
+
+        res.on('data', (chunk) => {
+            data += chunk
+        });
+
+        res.on('end', () => {
+            console.log(JSON.parse(data))
+        })
+    }).on('error', error => {
+        console.error(error)
+    })
+
+    req.write(params)
+    req.end()
+});
+
 
 module.exports = router;
