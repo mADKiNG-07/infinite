@@ -1,10 +1,14 @@
 const https = require('https');
 const express = require('express');
-const mAuth = require('../middleware/mAuth');
-const mAdmin = require('../middleware/mAdmin');
 const router = express.Router();
-const Plan = require('./../models/plan');
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 require('dotenv').config();
+
+var planSchema = new Schema({}, { strict: false });
+var Plan = mongoose.model('Plan', planSchema);
+
+
 
 // params for monthly subscription
 const m_params = JSON.stringify({
@@ -16,16 +20,16 @@ const m_params = JSON.stringify({
 
 // params for bi-annually subscription
 const bi_params = JSON.stringify({
-    "name": "Bi-Annual Infinity",
-    "interval": "biannually",
+    "name": "Monthly Infinity",
+    "interval": "monthly",
     "invoice_limit": 6,
     "amount": 40000
 });
 
 // params for annually subscription
 const a_params = JSON.stringify({
-    "name": "Annual Infinity",
-    "interval": "annually",
+    "name": "Monthly Infinity",
+    "interval": "monthly",
     "invoice_limit": 12,
     "amount": 40000
 });
@@ -41,13 +45,14 @@ const options = {
     }
 }
 
-router.post('/add-monthly-plan', [mAdmin, mAuth], (req, _res) => {
+
+router.post('/add-monthly-plan', (req, _res) => {
     req = https.request(options, res => {
         let data = ''
 
         res.on('data', (chunk) => {
             data += chunk;
-            const plan = new Plan({ plan: JSON.parse(data) });
+            var plan = new Plan({ plan: JSON.parse(data) });
             plan.save() // iAmNotInTheSchema is now saved to the db!!
         });
 
@@ -58,17 +63,20 @@ router.post('/add-monthly-plan', [mAdmin, mAuth], (req, _res) => {
         console.error(error)
     })
 
+
+
+
     req.write(m_params)
     req.end()
 });
 
-router.post('/add-biAnnual-plan', [mAdmin, mAuth], (req, _res) => {
+router.post('/add-biAnnual-plan', (req, _res) => {
     req = https.request(options, res => {
         let data = ''
 
         res.on('data', (chunk) => {
             data += chunk;
-            const plan = new Plan({ plan: JSON.parse(data) });
+            var plan = new Plan({ plan: JSON.parse(data) });
             plan.save()
         });
 
@@ -83,13 +91,13 @@ router.post('/add-biAnnual-plan', [mAdmin, mAuth], (req, _res) => {
     req.end()
 });
 
-router.post('/add-annual-plan', [mAdmin, mAuth], (req, _res) => {
+router.post('/add-annual-plan', (req, _res) => {
     req = https.request(options, res => {
         let data = ''
 
         res.on('data', (chunk) => {
             data += chunk;
-            const plan = new Plan({ plan: JSON.parse(data) });
+            var plan = new Plan({ plan: JSON.parse(data) });
             plan.save()
         });
 

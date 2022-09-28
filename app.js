@@ -3,8 +3,7 @@ const winston = require('winston');
 const express = require('express');
 const postRoutes = require('./routes/postRoutes');
 const userRoutes = require('./routes/userRoutes');
-const plans = require('./routes/plansRoutes');
-const subscriptions = require('./routes/subscriptionRoutes');
+const plans = require('./routes/plans');
 const auth = require('./routes/auth');
 const app = express();
 
@@ -40,7 +39,6 @@ app.use(function (req, res, next) {
 app.use('/posts', postRoutes);
 app.use('/users', userRoutes);
 app.use('/plans', plans);
-app.use('/subscriptions', subscriptions);
 app.use('/auth', auth);
 
 

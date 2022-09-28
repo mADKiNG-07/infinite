@@ -11,7 +11,6 @@ router.use(function (req, res, next) {
 });
 
 router.post('/add-post', [mAuth, mAdmin], (req, res) => {
-
     const post = new Post(_.pick(req.body, "title", "body", "imgUrl", "timeFrame"));
 
     post.save()
