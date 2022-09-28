@@ -1,4 +1,5 @@
 const config = require('config');
+const cors = require('cors');
 const winston = require('winston');
 const express = require('express');
 const postRoutes = require('./routes/postRoutes');
@@ -9,6 +10,9 @@ const app = express();
 
 require('./startup/prod')(app);
 require('./startup/db')();
+
+app.use(express.json());
+app.use(cors());
 
 // Add headers
 app.use(function (req, res, next) {
@@ -34,7 +38,6 @@ if (!config.get('jwtPrivateKey')) {
     process.exit(1);
 }
 
-app.use(express.json());
 
 app.use('/posts', postRoutes);
 app.use('/users', userRoutes);
