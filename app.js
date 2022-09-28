@@ -10,13 +10,6 @@ const app = express();
 require('./startup/prod')(app);
 require('./startup/db')();
 
-
-if (!config.get('jwtPrivateKey')) {
-    console.error("FATAL ERROR: jwtPrivateKey is not defined!");
-    process.exit(1);
-}
-
-app.use(express.json());
 // Add headers
 app.use(function (req, res, next) {
     // Website you wish to allow to connect
@@ -30,11 +23,18 @@ app.use(function (req, res, next) {
 
     // Set to true if you need the website to include cookies in the requests sent
     // to the API (e.g. in case you use sessions)
-    res.setHeader('Access-Control-Allow-Credentials', false);
+    res.setHeader('Access-Control-Allow-Credentials', true);
 
     // Pass to next layer of middleware
     next();
 });
+
+if (!config.get('jwtPrivateKey')) {
+    console.error("FATAL ERROR: jwtPrivateKey is not defined!");
+    process.exit(1);
+}
+
+app.use(express.json());
 
 app.use('/posts', postRoutes);
 app.use('/users', userRoutes);
